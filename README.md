@@ -4,7 +4,7 @@ Zero-dependency, zero-overhead Win32 User32 bindings for [Bun](https://bun.sh) o
 
 ## Overview
 
-`bun-user32` exposes the User32 entry points exported by `user32.dll` using [Bun](https://bun.sh)'s FFI. It provides a single class, `User32`, which lazily binds native symbols once via `Init()` and then calls directly into the DLL.
+`bun-user32` exposes the User32 entry points exported by `user32.dll` using [Bun](https://bun.sh)'s FFI. It provides a single class, `User32`, which lazily binds native symbols on first use and then calls directly into the DLL. You can optionally preload a subset or all symbols up-front via `Preload()`.
 
 The bindings are strongly typed for a smooth DX in TypeScript.
 
@@ -15,7 +15,7 @@ The bindings are strongly typed for a smooth DX in TypeScript.
 - [Bun](https://bun.sh)-first ergonomics on Windows 10/11.
 - Direct FFI to `user32.dll` (windows, input, clipboard, monitors, and more).
 - In-source docs – each method includes a Microsoft Docs link above its declaration in `structs/User32.ts`.
-- Lazy, one-time initialization (`User32.Init()`).
+- Lazy binding on first call; optional eager preload (`User32.Preload()`).
 - No wrapper overhead; calls map 1:1 to native APIs.
 - Strongly-typed Win32 aliases (see `types/User32.ts`).
 
@@ -35,8 +35,8 @@ bun add bun-user32
 ```ts
 import User32 from 'bun-user32';
 
-// Bind all symbols from user32.dll once
-User32.Init();
+// Optionally bind all symbols up-front
+User32.Preload();
 
 // Helper to create a null-terminated UTF-16LE buffer
 const toWide = (s: string) => Buffer.from(s + '\0', 'utf16le');
@@ -48,13 +48,13 @@ User32.MessageBoxW(0, toWide('Hello from bun-user32').ptr, toWide('bun-user32').
 ## API Highlights
 
 - Exact names and signatures that mirror the native API surface.
-- `Init()` – Loads and binds all exported User32 symbols.
+- `Preload()` – Loads and binds a subset or all User32 symbols.
 - `MessageBoxW`, `FindWindowW`, `GetCursorPos`, `SetForegroundWindow`, `RegisterClassW`, `CreateWindowExW`, and many more.
 - Pointer-friendly – this package adds a `.ptr` property to ArrayBuffer/Buffer/DataView/TypedArray via a tiny runtime extension for Bun FFI convenience.
 
 ## Notes
 
-- Always call `User32.Init()` before invoking any `User32.*` function.
+- No global init required. Either rely on lazy binding or call `User32.Preload()`.
 - User32 wide-string (`*W`) functions expect UTF-16LE + null terminator. Use a helper like `toWide()` and pass `.ptr`.
 - Windows only. Bun runtime required.
 

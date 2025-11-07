@@ -1,10 +1,8 @@
 import User32, { MessageBoxType } from 'bun-user32';
 
-// Bind all symbols from user32.dll once
+// Optionally preload all symbols once (or rely on lazy binding)
 const start = performance.now();
-
-User32.Init();
-
+User32.Preload();
 const end = performance.now();
 
 const ms = (end - start).toFixed(2);
