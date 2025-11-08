@@ -1,3 +1,8 @@
+> [!WARNING]
+> There is currently in Bun making it impossible to pass `CString` to `FFITpe.cstring`: https://github.com/oven-sh/bun/issues/24518
+>
+> Until this is fixed, all `FFITpe.cstring` have been changed to `FFITpe.ptr`.
+
 # bun-user32
 
 Zero-dependency, zero-overhead Win32 User32 bindings for [Bun](https://bun.sh) on Windows.
