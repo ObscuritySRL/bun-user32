@@ -11,8 +11,9 @@ console.log('User32 loaded in %sms…', ms);
 
 const hWnd = null;
 
-const lpCaption = Buffer.from('bun-user32\0', 'utf16le');
-const lpText = Buffer.from(`User32 loaded in ${ms}ms…\0`, 'utf16le');
+const caption = 'bun-user32';
+const text = `User32 loaded in ${ms}ms…`;
 
 // Call MessageBoxW(NULL, L"User32 loaded in 123.45ms…", L"bun-user32", MB_OK)
-User32.MessageBoxW(hWnd, lpText.ptr, lpCaption.ptr, MessageBoxType.MB_OK);
+User32.MessageBoxW(hWnd, text, caption, MessageBoxType.MB_OK);
+
