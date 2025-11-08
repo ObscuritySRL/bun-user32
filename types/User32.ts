@@ -1,4 +1,4 @@
-﻿import type { Pointer } from 'bun:ffi';
+﻿import type { CString, Pointer } from 'bun:ffi';
 
 export const HWND_ZORDER = {
   TOP: 0 as HWND,
@@ -412,7 +412,7 @@ export type LPCRECT = Pointer;
 export type LPCSCROLLINFO = Pointer;
 export type LPCSTR = Pointer;
 export type LPCVOID = Pointer;
-export type LPCWSTR = string | Pointer;
+export type LPCWSTR = CString;
 export type LPDEVMODEW = Pointer;
 export type LPDRAWTEXTPARAMS = Pointer;
 export type LPDWORD = Pointer;
@@ -526,4 +526,6 @@ export type WNDENUMPROC = Pointer;
 export type WNDPROC = Pointer;
 export type WORD = number;
 export type WPARAM = UINT_PTR;
+
+
 
