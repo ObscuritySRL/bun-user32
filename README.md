@@ -1,7 +1,8 @@
-> [!WARNING]
-> There is currently in Bun making it impossible to pass `CString` to `FFITpe.cstring`: https://github.com/oven-sh/bun/issues/24518
+> [!NOTE]
+> A Bug in Bun is making it impossible to pass `CString` to `FFITpe.cstring`:
+> https://github.com/oven-sh/bun/issues/24518
 >
-> Until this is fixed, all `FFITpe.cstring` have been changed to `FFITpe.ptr`.
+> Until this is fixed, all `Symbols` with `FFITpe.cstring` have been temporarily changed to `FFITpe.ptr`.
 
 # bun-user32
 
@@ -38,16 +39,20 @@ bun add bun-user32
 ## Quick Start
 
 ```ts
-import User32 from 'bun-user32';
+import { type Pointer, ptr } from 'bun:ffi';
+import User32, { MessageBoxType } from 'bun-user32';
 
 // Optionally bind all symbols up-front
 User32.Preload();
 
-// Helper to create a null-terminated UTF-16LE buffer
-const toWide = (s: string) => Buffer.from(s + '\0', 'utf16le');
+// Create the parameters for MessageBoxW
+const hWnd = null as unknown as Pointer;
+const lpCaption = ptr(Buffer.from('bun-user32\0', 'utf16le'));
+const lpText = ptr(Buffer.from('Hello from bun-user32\0', 'utf16le'));
+const uType = MessageBoxType.MB_OK;
 
-// Call MessageBoxW(NULL, L"Hello", L"bun-user32", MB_OK)
-User32.MessageBoxW(0, toWide('Hello from bun-user32').ptr, toWide('bun-user32').ptr, 0);
+// Call MessageBoxW(NULL, L"Hello from bun-user32", L"bun-user32", 0)
+User32.MessageBoxW(hWnd, lpText, lpCaption, 0);
 ```
 
 ## API Highlights

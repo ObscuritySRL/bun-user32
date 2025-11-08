@@ -1,9 +1,10 @@
-import User32 from 'bun-user32';
+import { type Pointer, ptr } from 'bun:ffi';
 
-// Minimal demo: pass UTF-16LE buffers via .ptr
-const hWnd = null;
-const lpCaption = Buffer.from('bun-user32\0', 'utf16le');
-const lpText = Buffer.from('Hello from bun-user32\0', 'utf16le');
-const uType = 0; // MB_OK
+import User32, { MessageBoxType } from 'bun-user32';
 
-User32.MessageBoxW(hWnd, lpText.ptr, lpCaption.ptr, uType);
+const hWnd = null as unknown as Pointer;
+const lpCaption = ptr(Buffer.from('bun-user32\0', 'utf16le'));
+const lpText = ptr(Buffer.from('Hello from bun-user32\0', 'utf16le'));
+const uType = MessageBoxType.MB_OK;
+
+User32.MessageBoxW(hWnd, lpText, lpCaption, uType);
