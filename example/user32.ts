@@ -1,10 +1,27 @@
-import { type Pointer, ptr } from 'bun:ffi';
+/**
+ * Simple MessageBox Example
+ *
+ * Demonstrates basic usage of the bun-user32 library
+ * to display a Windows message box.
+ */
 
-import User32, { MessageBoxType } from 'bun-user32';
+import type { Pointer } from 'bun:ffi';
+import '../runtime/extensions';
+import User32 from '../structs/User32';
+import { MessageBoxType } from '../types/User32';
 
-const hWnd = null as unknown as Pointer;
-const lpCaption = ptr(Buffer.from('bun-user32\0', 'utf16le'));
-const lpText = ptr(Buffer.from('Hello from bun-user32\0', 'utf16le'));
-const uType = MessageBoxType.MB_OK;
+// Null pointer helper for optional HWND parameters
+const NULL = null as unknown as Pointer;
 
-User32.MessageBoxW(hWnd, lpText, lpCaption, uType);
+// UTF-16LE encoding helper (Windows wide strings)
+const encode = (str: string) => Buffer.from(`${str}\0`, 'utf16le');
+
+// Show a simple message box
+const result = User32.MessageBoxW(
+  NULL,
+  encode('Hello from bun-user32! 🎉').ptr,
+  encode('Welcome').ptr,
+  MessageBoxType.MB_OK | MessageBoxType.MB_ICONINFORMATION
+);
+
+console.log(`MessageBox returned: ${result}`);

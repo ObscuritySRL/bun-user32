@@ -97,6 +97,7 @@ import type {
   MONITORENUMPROC,
   MSGBOXPARAMSW,
   ORIENTATION_PREFERENCE,
+  PORIENTATION_PREFERENCE,
   PAINTSTRUCT,
   PALTTABINFO,
   PAR_STATE,
@@ -141,6 +142,7 @@ import type {
   PTITLEBARINFO,
   PTOUCHINPUT,
   PUINT,
+  PUINT_PTR,
   PULONG,
   PVOID,
   PWINDOWINFO,
@@ -425,7 +427,7 @@ class User32 {
     EnumWindows: { args: [FFIType.ptr, FFIType.i64], returns: FFIType.i32 },
     EnumWindowStationsW: { args: [FFIType.ptr, FFIType.i64], returns: FFIType.i32 },
     EqualRect: { args: [FFIType.ptr, FFIType.ptr], returns: FFIType.i32 },
-    EvaluateProximityToPolygon: { args: [FFIType.ptr, FFIType.u32, FFIType.ptr, FFIType.ptr], returns: FFIType.i32 },
+    EvaluateProximityToPolygon: { args: [FFIType.u32, FFIType.ptr, FFIType.ptr, FFIType.ptr], returns: FFIType.i32 },
     EvaluateProximityToRect: { args: [FFIType.ptr, FFIType.ptr, FFIType.ptr], returns: FFIType.i32 },
     ExcludeUpdateRgn: { args: [FFIType.ptr, FFIType.ptr], returns: FFIType.i32 },
     ExitWindowsEx: { args: [FFIType.u32, FFIType.u32], returns: FFIType.i32 },
@@ -756,7 +758,7 @@ class User32 {
     SetDoubleClickTime: { args: [FFIType.u32], returns: FFIType.i32 },
     SetFocus: { args: [FFIType.ptr], returns: FFIType.ptr },
     SetForegroundWindow: { args: [FFIType.ptr], returns: FFIType.i32 },
-    SetGestureConfig: { args: [FFIType.ptr, FFIType.u32, FFIType.ptr, FFIType.u32], returns: FFIType.i32 },
+    SetGestureConfig: { args: [FFIType.ptr, FFIType.u32, FFIType.u32, FFIType.ptr, FFIType.u32], returns: FFIType.i32 },
     SetKeyboardState: { args: [FFIType.ptr], returns: FFIType.i32 },
     SetLastErrorEx: { args: [FFIType.u32, FFIType.u32], returns: FFIType.void },
     SetLayeredWindowAttributes: { args: [FFIType.ptr, FFIType.u32, FFIType.u8, FFIType.u32], returns: FFIType.i32 },
@@ -1871,7 +1873,7 @@ class User32 {
   }
 
   // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdisplayautorotationpreferences
-  public static GetDisplayAutoRotationPreferences(pOrientation: ORIENTATION_PREFERENCE): BOOL {
+  public static GetDisplayAutoRotationPreferences(pOrientation: PORIENTATION_PREFERENCE): BOOL {
     return User32.Load('GetDisplayAutoRotationPreferences')(pOrientation);
   }
 
@@ -1891,7 +1893,7 @@ class User32 {
   }
 
   // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdlgitemint
-  public static GetDlgItemInt(hDlg: HWND, nIDDlgItem: int, lpTranslated: BOOL, bSigned: BOOL): UINT {
+  public static GetDlgItemInt(hDlg: HWND, nIDDlgItem: int, lpTranslated: LPINT, bSigned: BOOL): UINT {
     return User32.Load('GetDlgItemInt')(hDlg, nIDDlgItem, lpTranslated, bSigned);
   }
 
@@ -2141,7 +2143,7 @@ class User32 {
   }
 
   // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getpointercursorid
-  public static GetPointerCursorId(pointerId: UINT32, cursorId: UINT32): BOOL {
+  public static GetPointerCursorId(pointerId: UINT32, cursorId: PUINT): BOOL {
     return User32.Load('GetPointerCursorId')(pointerId, cursorId);
   }
 
@@ -2171,7 +2173,7 @@ class User32 {
   }
 
   // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getpointerframeinfo
-  public static GetPointerFrameInfo(pointerId: UINT32, pointerCount: UINT32, pointerInfo: POINTER_INFO): BOOL {
+  public static GetPointerFrameInfo(pointerId: UINT32, pointerCount: PUINT, pointerInfo: POINTER_INFO): BOOL {
     return User32.Load('GetPointerFrameInfo')(pointerId, pointerCount, pointerInfo);
   }
 
@@ -2236,7 +2238,7 @@ class User32 {
   }
 
   // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getprocessdefaultlayout
-  public static GetProcessDefaultLayout(pdwDefaultLayout: DWORD): BOOL {
+  public static GetProcessDefaultLayout(pdwDefaultLayout: LPDWORD): BOOL {
     return User32.Load('GetProcessDefaultLayout')(pdwDefaultLayout);
   }
 
@@ -3752,118 +3754,99 @@ class User32 {
     return User32.Load('mouse_event')(dwFlags, dx, dy, dwData, dwExtraInfo);
   }
 
-  // PLACEHOLDER: Prototype not found on Learn.
-  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-changemenuw
-  public static ChangeMenuW(p0: LPVOID, p1: UINT, p2: LPVOID, p3: UINT, p4: UINT): any {
-    throw new Error('User32 has not been initialized… (placeholder signature)');
+  // Undocumented: Obsolete function
+  public static ChangeMenuW(hMenu: HMENU, cmd: UINT, lpszNewItem: LPCWSTR, cmdInsert: UINT, flags: UINT): BOOL {
+    return User32.Load('ChangeMenuW')(hMenu, cmd, lpszNewItem, cmdInsert, flags);
   }
 
-  // PLACEHOLDER: Prototype not found on Learn.
-  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowinband
-  public static CreateWindowInBand(p0: UINT, p1: LPVOID, p2: LPVOID, p3: UINT, p4: int, p5: int, p6: int, p7: int, p8: LPVOID, p9: LPVOID, p10: LPVOID, p11: LPVOID, p12: UINT): any {
-    throw new Error('User32 has not been initialized… (placeholder signature)');
+  // Undocumented: Internal API for creating windows in specific bands
+  public static CreateWindowInBand(dwExStyle: DWORD, lpClassName: LPCWSTR, lpWindowName: LPCWSTR, dwStyle: DWORD, X: int, Y: int, nWidth: int, nHeight: int, hWndParent: HWND, hMenu: HMENU, hInstance: HINSTANCE, lpParam: LPVOID, dwBand: DWORD): HWND {
+    return User32.Load('CreateWindowInBand')(dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam, dwBand);
   }
 
-  // PLACEHOLDER: Prototype not found on Learn.
-  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowinbandex
-  public static CreateWindowInBandEx(p0: UINT, p1: LPVOID, p2: LPVOID, p3: UINT, p4: int, p5: int, p6: int, p7: int, p8: LPVOID, p9: LPVOID, p10: LPVOID, p11: LPVOID, p12: UINT, p13: UINT): any {
-    throw new Error('User32 has not been initialized… (placeholder signature)');
+  // Undocumented: Extended version of CreateWindowInBand
+  public static CreateWindowInBandEx(dwExStyle: DWORD, lpClassName: LPCWSTR, lpWindowName: LPCWSTR, dwStyle: DWORD, X: int, Y: int, nWidth: int, nHeight: int, hWndParent: HWND, hMenu: HMENU, hInstance: HINSTANCE, lpParam: LPVOID, dwBand: DWORD, dwTypeFlags: DWORD): HWND {
+    return User32.Load('CreateWindowInBandEx')(dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam, dwBand, dwTypeFlags);
   }
 
-  // PLACEHOLDER: Prototype not found on Learn.
-  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawcaptiontempw
-  public static DrawCaptionTempW(p0: LPVOID, p1: LPVOID, p2: LPVOID, p3: LPVOID, p4: LPVOID, p5: UINT): any {
-    throw new Error('User32 has not been initialized… (placeholder signature)');
+  // Undocumented: Internal helper for drawing captions
+  public static DrawCaptionTempW(hwnd: HWND, hdc: HDC, lprect: LPRECT, hFont: HANDLE, hIcon: HICON, lpszText: UINT): BOOL {
+    return User32.Load('DrawCaptionTempW')(hwnd, hdc, lprect, hFont, hIcon, lpszText);
   }
 
-  // PLACEHOLDER: Prototype not found on Learn.
-  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-freeddelparam
-  public static FreeDDElParam(p0: UINT, p1: LONG_PTR): any {
-    throw new Error('User32 has not been initialized… (placeholder signature)');
+  // https://learn.microsoft.com/en-us/windows/win32/api/dde/nf-dde-freeddelparam
+  public static FreeDDElParam(msg: UINT, lParam: LPARAM): BOOL {
+    return User32.Load('FreeDDElParam')(msg, lParam);
   }
 
-  // PLACEHOLDER: Prototype not found on Learn.
-  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getpointerframetimes
-  public static GetPointerFrameTimes(p0: UINT, p1: LPVOID, p2: LPVOID): any {
-    throw new Error('User32 has not been initialized… (placeholder signature)');
+  // Undocumented: Gets pointer frame timing information
+  public static GetPointerFrameTimes(pointerId: UINT32, pointerCount: PUINT, pointerTimestamps: PULONG): BOOL {
+    return User32.Load('GetPointerFrameTimes')(pointerId, pointerCount, pointerTimestamps);
   }
 
-  // PLACEHOLDER: Prototype not found on Learn.
-  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowband
-  public static GetWindowBand(p0: LPVOID, p1: LPVOID): any {
-    throw new Error('User32 has not been initialized… (placeholder signature)');
+  // Undocumented: Gets the window band
+  public static GetWindowBand(hwnd: HWND, pdwBand: LPDWORD): BOOL {
+    return User32.Load('GetWindowBand')(hwnd, pdwBand);
   }
 
-  // PLACEHOLDER: Prototype not found on Learn.
-  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowcompositionattribute
-  public static GetWindowCompositionAttribute(p0: LPVOID, p1: LPVOID): any {
-    throw new Error('User32 has not been initialized… (placeholder signature)');
+  // Undocumented: Gets window composition attributes (commonly used for DWM effects)
+  public static GetWindowCompositionAttribute(hwnd: HWND, pAttrData: LPVOID): BOOL {
+    return User32.Load('GetWindowCompositionAttribute')(hwnd, pAttrData);
   }
 
-  // PLACEHOLDER: Prototype not found on Learn.
-  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindowredirectedforprint
-  public static IsWindowRedirectedForPrint(p0: LPVOID): any {
-    throw new Error('User32 has not been initialized… (placeholder signature)');
+  // Undocumented: Checks if window is redirected for print
+  public static IsWindowRedirectedForPrint(hwnd: HWND): BOOL {
+    return User32.Load('IsWindowRedirectedForPrint')(hwnd);
   }
 
-  // PLACEHOLDER: Prototype not found on Learn.
-  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messageboxtimeoutw
-  public static MessageBoxTimeoutW(p0: LPVOID, p1: LPVOID, p2: LPVOID, p3: UINT, p4: WORD, p5: UINT): any {
-    throw new Error('User32 has not been initialized… (placeholder signature)');
+  // Undocumented: MessageBox with timeout (commonly used)
+  public static MessageBoxTimeoutW(hWnd: HWND, lpText: LPCWSTR, lpCaption: LPCWSTR, uType: UINT, wLanguageId: WORD, dwMilliseconds: DWORD): int {
+    return User32.Load('MessageBoxTimeoutW')(hWnd, lpText, lpCaption, uType, wLanguageId, dwMilliseconds);
   }
 
-  // PLACEHOLDER: Prototype not found on Learn.
   // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-openthreaddesktop
-  public static OpenThreadDesktop(p0: UINT, p1: int, p2: UINT): any {
-    throw new Error('User32 has not been initialized… (placeholder signature)');
+  public static OpenThreadDesktop(dwThreadId: DWORD, fInherit: BOOL, dwDesiredAccess: ACCESS_MASK): HDESK {
+    return User32.Load('OpenThreadDesktop')(dwThreadId, fInherit, dwDesiredAccess);
   }
 
-  // PLACEHOLDER: Prototype not found on Learn.
-  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-packddelparam
-  public static PackDDElParam(p0: UINT, p1: ULONG_PTR, p2: LONG_PTR): any {
-    throw new Error('User32 has not been initialized… (placeholder signature)');
+  // https://learn.microsoft.com/en-us/windows/win32/api/dde/nf-dde-packddelparam
+  public static PackDDElParam(msg: UINT, uiLo: UINT_PTR, uiHi: UINT_PTR): LPARAM {
+    return User32.Load('PackDDElParam')(msg, uiLo, uiHi);
   }
 
-  // PLACEHOLDER: Prototype not found on Learn.
-  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-reuseddelparam
-  public static ReuseDDElParam(p0: LONG_PTR, p1: UINT, p2: UINT, p3: ULONG_PTR, p4: ULONG_PTR): any {
-    throw new Error('User32 has not been initialized… (placeholder signature)');
+  // https://learn.microsoft.com/en-us/windows/win32/api/dde/nf-dde-reuseddelparam
+  public static ReuseDDElParam(lParam: LPARAM, msgIn: UINT, msgOut: UINT, uiLo: UINT_PTR, uiHi: UINT_PTR): LPARAM {
+    return User32.Load('ReuseDDElParam')(lParam, msgIn, msgOut, uiLo, uiHi);
   }
 
-  // PLACEHOLDER: Prototype not found on Learn.
-  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmessagequeue
-  public static SetMessageQueue(p0: int): any {
-    throw new Error('User32 has not been initialized… (placeholder signature)');
+  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmessagequeue (obsolete, always returns TRUE)
+  public static SetMessageQueue(cMessagesMax: int): BOOL {
+    return User32.Load('SetMessageQueue')(cMessagesMax);
   }
 
-  // PLACEHOLDER: Prototype not found on Learn.
-  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowband
-  public static SetWindowBand(p0: LPVOID, p1: LPVOID, p2: UINT): any {
-    throw new Error('User32 has not been initialized… (placeholder signature)');
+  // Undocumented: Sets the window band
+  public static SetWindowBand(hwnd: HWND, hwndInsertAfter: HWND, dwBand: DWORD): BOOL {
+    return User32.Load('SetWindowBand')(hwnd, hwndInsertAfter, dwBand);
   }
 
-  // PLACEHOLDER: Prototype not found on Learn.
-  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowcompositionattribute
-  public static SetWindowCompositionAttribute(p0: LPVOID, p1: LPVOID): any {
-    throw new Error('User32 has not been initialized… (placeholder signature)');
+  // Undocumented: Sets window composition attributes (commonly used for DWM effects)
+  public static SetWindowCompositionAttribute(hwnd: HWND, pAttrData: LPVOID): BOOL {
+    return User32.Load('SetWindowCompositionAttribute')(hwnd, pAttrData);
   }
 
-  // PLACEHOLDER: Prototype not found on Learn.
-  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowword
-  public static SetWindowWord(p0: LPVOID, p1: int, p2: WORD): any {
-    throw new Error('User32 has not been initialized… (placeholder signature)');
+  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowword (obsolete)
+  public static SetWindowWord(hWnd: HWND, nIndex: int, wNewWord: WORD): WORD {
+    return User32.Load('SetWindowWord')(hWnd, nIndex, wNewWord);
   }
 
-  // PLACEHOLDER: Prototype not found on Learn.
-  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unpackddelparam
-  public static UnpackDDElParam(p0: UINT, p1: LONG_PTR, p2: LPVOID, p3: LPVOID): any {
-    throw new Error('User32 has not been initialized… (placeholder signature)');
+  // https://learn.microsoft.com/en-us/windows/win32/api/dde/nf-dde-unpackddelparam
+  public static UnpackDDElParam(msg: UINT, lParam: LPARAM, puiLo: PUINT_PTR, puiHi: PUINT_PTR): BOOL {
+    return User32.Load('UnpackDDElParam')(msg, lParam, puiLo, puiHi);
   }
 
-  // PLACEHOLDER: Prototype not found on Learn.
   // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-updatelayeredwindowindirect
-  public static UpdateLayeredWindowIndirect(p0: LPVOID, p1: LPVOID): any {
-    throw new Error('User32 has not been initialized… (placeholder signature)');
+  public static UpdateLayeredWindowIndirect(hWnd: HWND, pULWInfo: LPVOID): BOOL {
+    return User32.Load('UpdateLayeredWindowIndirect')(hWnd, pULWInfo);
   }
 }
 

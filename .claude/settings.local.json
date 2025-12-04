@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./dumpbin.exe //exports C:WindowsSystem32user32.dll)",
+      "Bash(bun run typecheck:*)",
+      "Bash(npx tsc:*)",
+      "Bash(bun build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

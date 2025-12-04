@@ -39,20 +39,22 @@ bun add bun-user32
 ## Quick Start
 
 ```ts
-import { type Pointer, ptr } from 'bun:ffi';
+import type { Pointer } from 'bun:ffi';
 import User32, { MessageBoxType } from 'bun-user32';
 
-// Optionally bind all symbols up-front
-User32.Preload();
+// Helper: UTF-16LE null-terminated string
+const encode = (str: string) => Buffer.from(`${str}\0`, 'utf16le');
 
-// Create the parameters for MessageBoxW
-const hWnd = null as unknown as Pointer;
-const lpCaption = ptr(Buffer.from('bun-user32\0', 'utf16le'));
-const lpText = ptr(Buffer.from('Hello from bun-user32\0', 'utf16le'));
-const uType = MessageBoxType.MB_OK;
+// Null pointer for optional HWND
+const NULL = null as unknown as Pointer;
 
-// Call MessageBoxW(NULL, L"Hello from bun-user32", L"bun-user32", 0)
-User32.MessageBoxW(hWnd, lpText, lpCaption, 0);
+// Show a message box
+User32.MessageBoxW(
+  NULL,
+  encode('Hello from bun-user32!').ptr,
+  encode('Welcome').ptr,
+  MessageBoxType.MB_OK | MessageBoxType.MB_ICONINFORMATION
+);
 ```
 
 ## API Highlights

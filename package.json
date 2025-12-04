@@ -23,7 +23,7 @@
     "url": "git://github.com/obscuritysrl/bun-user32.git"
   },
   "type": "module",
-  "version": "3.0.7",
+  "version": "3.0.8",
   "main": "./index.ts",
   "keywords": [
     "bun",
@@ -47,6 +47,9 @@
     "bun": ">=1.1.0"
   },
   "scripts": {
-    "example": "bun ./example/user32.ts"
+    "example": "bun ./example/user32.ts",
+    "example:mouse": "bun ./example/mouse-stalker.ts",
+    "example:hotkey": "bun ./example/hotkey-demo.ts",
+    "example:countdown": "bun ./example/countdown-dialog.ts"
   }
 }
