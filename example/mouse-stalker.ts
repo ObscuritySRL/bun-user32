@@ -14,13 +14,16 @@
  * Press Ctrl+C in the terminal to exit.
  */
 
-import type { Pointer } from 'bun:ffi';
 import '../runtime/extensions';
 import User32 from '../structs/User32';
 import { ExtendedWindowStyles, ShowWindowCommand, WindowStyles } from '../types/User32';
 
-// Null pointer helper for optional HWND parameters
-const NULL = null as unknown as Pointer;
+import type { Pointer } from 'bun:ffi';
+
+// Null handle (bigint zero) for optional HWND parameters
+const NULL = 0n;
+// Null pointer for LPVOID parameters
+const NULL_PTR = null as unknown as Pointer;
 
 // UTF-16LE encoded null-terminated strings
 const encode = (str: string) => Buffer.from(`${str}\0`, 'utf16le');
@@ -50,7 +53,7 @@ const hwnd = User32.CreateWindowExW(
   NULL, // No parent
   NULL, // No menu
   NULL, // Default instance
-  NULL // No extra params
+  NULL_PTR // No extra params (lpParam is a Pointer, not a handle)
 );
 
 if (!hwnd) {

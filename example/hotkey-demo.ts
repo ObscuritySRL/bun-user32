@@ -16,13 +16,12 @@
  * - MessageBoxW for notifications
  */
 
-import type { Pointer } from 'bun:ffi';
 import '../runtime/extensions';
 import User32 from '../structs/User32';
 import { MessageBoxType } from '../types/User32';
 
-// Null pointer helper
-const NULL = null as unknown as Pointer;
+// Null handle (bigint zero) for optional HWND parameters
+const NULL = 0n;
 
 // UTF-16LE encoding helper
 const encode = (str: string) => Buffer.from(`${str}\0`, 'utf16le');
